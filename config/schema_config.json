@@ -1,0 +1,8 @@
+{
+  "patient_id": ["Patient_ID", "PID", "patient"],
+  "test_name": ["Test_Name", "Test", "Diagnostic_Test"],
+  "test_category": ["Category", "Test_Category", "Type"],
+  "test_date": ["Test_Date", "Date", "Booking_Date"],
+  "test_price": ["Price", "Amount", "Test_Price_INR"],
+  "revenue": ["Revenue", "Total", "Revenue_INR"]
+}
