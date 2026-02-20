@@ -1,15 +1,15 @@
 from sqlalchemy import create_engine
-from urllib.parse import quote_plus
+import os
 
-# Railway MySQL credentials
-DB_USER = "root"
-DB_PASSWORD = quote_plus("uUMEFBuCNTEndAyOShcXwaiuPTeLYZda")
-DB_HOST = "mysql.railway.internal"
-DB_PORT = "3306"
-DB_NAME = "railway"
+# Railway PUBLIC MySQL URL (required for Streamlit Cloud)
+DATABASE_URL = os.getenv(
+    "MYSQL_PUBLIC_URL",
+    "mysql://root:uUMEFBuCNTEndAyOShcXwaiuPTeLYZda@crossover.proxy.rlwy.net:44781/railway"
+)
 
 engine = create_engine(
-    f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    DATABASE_URL,
+    pool_pre_ping=True
 )
 
 print("✅ Database engine created successfully")
