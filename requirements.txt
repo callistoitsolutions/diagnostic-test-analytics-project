@@ -1,10 +1,6 @@
-streamlit>=1.31.0
-pandas>=2.2.0
-numpy>=1.26.4
-altair>=5.2.0
-plotly>=5.20.0
-matplotlib>=3.8.0
-seaborn>=0.13.0
-scikit-learn>=1.4.0
-sqlalchemy>=2.0.20
-mysql-connector-python>=8.1.1
+streamlit
+pandas
+plotly
+sqlalchemy
+pymysql
+openpyxl
