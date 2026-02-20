@@ -1,15 +1,14 @@
 from sqlalchemy import create_engine
 import os
 
-# Railway PUBLIC MySQL URL (required for Streamlit Cloud)
-DATABASE_URL = os.getenv(
-    "MYSQL_PUBLIC_URL",
-    "mysql://root:uUMEFBuCNTEndAyOShcXwaiuPTeLYZda@crossover.proxy.rlwy.net:44781/railway"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL is not set in Streamlit Secrets")
 
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True
 )
 
-print("✅ Database engine created successfully")
+print("✅ Railway MySQL connected successfully")
