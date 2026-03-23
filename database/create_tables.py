@@ -1,28 +1,22 @@
-
 import sys
 import os
+from sqlalchemy import text
+from database.db_connection import engine
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
+with engine.connect() as conn:
+    conn.execute(text("""
+    CREATE TABLE IF NOT EXISTS test_transactions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        patient_id VARCHAR(50),
+        test_name VARCHAR(255),
+        test_category VARCHAR(255),
+        test_price FLOAT,
+        revenue FLOAT,
+        test_date DATE
+    )
+    """))
 
-import pandas as pd
-from database.db_connection import engine  # ✅ FIXED
-
-df = pd.DataFrame({
-    "patient_id": [],
-    "test_name": [],
-    "test_category": [],
-    "test_price": [],
-    "test_date": [],
-    "revenue": []
-})
-
-df.to_sql(
-    name="test_transactions",
-    con=engine,
-    if_exists="replace",
-    index=False
-)
-
-print("✅ Table 'test_transactions' created in Railway MySQL")
+print("✅ Table 'test_transactions' created successfully in TiDB")
