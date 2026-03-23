@@ -53,24 +53,36 @@ st.title("Diagnostic Analytics Dashboard")
 # --- Sidebar: File Upload + Filters ---
 st.sidebar.header("Upload & Filters")
 
-# File Upload
+# --- FIX 1: File Upload with os.makedirs ---
 file = st.sidebar.file_uploader("Upload Excel File", type=["xlsx"])
 if file:
-    path = f"{PROJECT_ROOT}/data/raw/{file.name}"
+    upload_dir = os.path.join(PROJECT_ROOT, "data/raw")
+    os.makedirs(upload_dir, exist_ok=True)
+
+    path = os.path.join(upload_dir, file.name)
+
     with open(path, "wb") as f:
         f.write(file.getbuffer())
+
     process_file(path)
     st.sidebar.success("Data uploaded & stored in database!")
 
-# Load data from DB
-query = text("SELECT * FROM test_transactions")
-df = pd.read_sql(query, engine)
+# --- FIX 2: Database query with error handling ---
+query = text("SELECT * FROM test_transactions LIMIT 10000")
+try:
+    df = pd.read_sql(query, engine)
+except Exception as e:
+    st.error("Database connection failed")
+    st.text(str(e))
+    st.stop()
 
 if df.empty:
     st.info("No data available yet. Please upload an Excel file in the sidebar.")
     st.stop()
 
-df['test_date'] = pd.to_datetime(df['test_date'])
+# --- FIX 3: Safe date parsing ---
+df['test_date'] = pd.to_datetime(df['test_date'], errors='coerce')
+df = df.dropna(subset=['test_date'])
 
 # --- Sidebar Filters ---
 categories = df['test_category'].unique().tolist()
