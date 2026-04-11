@@ -1,16 +1,6 @@
-import sys
-import os
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sqlalchemy import text
-
-# --- Project path setup ---
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-sys.path.append(PROJECT_ROOT)
-
-from analytics.data_cleaning import process_file
-from database.db_connection import engine
 
 st.set_page_config(
     page_title="Diagnostic Analytics Dashboard",
@@ -53,36 +43,39 @@ st.title("Diagnostic Analytics Dashboard")
 # --- Sidebar: File Upload + Filters ---
 st.sidebar.header("Upload & Filters")
 
-# --- FIX 1: File Upload with os.makedirs ---
+# --- File Upload (Direct Processing) ---
 file = st.sidebar.file_uploader("Upload Excel File", type=["xlsx"])
+
+# Initialize DataFrame
+df = pd.DataFrame()
+
 if file:
-    upload_dir = os.path.join(PROJECT_ROOT, "data/raw")
-    os.makedirs(upload_dir, exist_ok=True)
-
-    path = os.path.join(upload_dir, file.name)
-
-    with open(path, "wb") as f:
-        f.write(file.getbuffer())
-
-    process_file(path)
-    st.sidebar.success("Data uploaded & stored in database!")
-
-# --- FIX 2: Database query with error handling ---
-query = text("SELECT * FROM test_transactions LIMIT 10000")
-try:
-    df = pd.read_sql(query, engine)
-except Exception as e:
-    st.error("Database connection failed")
-    st.text(str(e))
+    try:
+        # Read Excel file directly
+        df = pd.read_excel(file)
+        st.sidebar.success("Data uploaded successfully!")
+    except Exception as e:
+        st.sidebar.error(f"Error reading file: {str(e)}")
+        st.stop()
+else:
+    st.info("Please upload an Excel file in the sidebar to begin.")
     st.stop()
 
 if df.empty:
-    st.info("No data available yet. Please upload an Excel file in the sidebar.")
+    st.info("No data available. Please upload a valid Excel file.")
     st.stop()
 
-# --- FIX 3: Safe date parsing ---
+# --- Safe date parsing ---
 df['test_date'] = pd.to_datetime(df['test_date'], errors='coerce')
 df = df.dropna(subset=['test_date'])
+
+# Check for required columns
+required_columns = ['test_date', 'test_category', 'test_name', 'test_price', 'revenue']
+missing_columns = [col for col in required_columns if col not in df.columns]
+if missing_columns:
+    st.error(f"Missing required columns: {', '.join(missing_columns)}")
+    st.info("Required columns: test_date, test_category, test_name, test_price, revenue")
+    st.stop()
 
 # --- Sidebar Filters ---
 categories = df['test_category'].unique().tolist()
