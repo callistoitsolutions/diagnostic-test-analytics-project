@@ -140,25 +140,25 @@ fig1 = px.bar(
     x="test_category",
     y="Total Tests",
     color="test_category",
-    template="plotly_dark",
     color_discrete_sequence=px.colors.sequential.Teal,
-    hover_data=["test_category", "Total Tests"]
+    title="Test Demand by Category"
 )
 fig1.update_layout(
-    title={'text': "Test Demand by Category", 'x':0.5, 'xanchor':'center', 'y':0.95, 'yanchor':'top'},
+    title={'text': "Test Demand by Category", 'x':0.5, 'xanchor':'center'},
     title_font=dict(size=24, color="#E5E5E5", family="Roboto"),
     showlegend=True,
     legend=dict(title="Test Category", font=dict(color="#E5E5E5", size=14),
                 bgcolor="#0B1524", bordercolor="#4DB6AC", borderwidth=1),
     plot_bgcolor=chart_bg_color,
     paper_bgcolor=chart_bg_color,
-    font_color="#E5E5E5"
+    font_color="#E5E5E5",
+    xaxis=dict(title_font=dict(color="#E5E5E5"), tickfont=dict(color="#E5E5E5")),
+    yaxis=dict(title_font=dict(color="#E5E5E5"), tickfont=dict(color="#E5E5E5"))
 )
 fig1.update_traces(
     marker=dict(line=dict(width=2, color='white')),
     opacity=0.9,
-    hovertemplate="<b>%{x}</b><br>Total Tests: %{y}<extra></extra>",
-    hoverlabel=dict(bgcolor="#00FFCC", font_size=16, font_color="#000000", font_family="Roboto")
+    hovertemplate="<b>%{x}</b><br>Total Tests: %{y}<extra></extra>"
 )
 col1.plotly_chart(fig1, use_container_width=True)
 
@@ -169,18 +169,16 @@ fig2 = px.pie(
     names="test_category",
     values="revenue",
     color="test_category",
-    template="plotly_dark",
     color_discrete_sequence=px.colors.sequential.Teal,
-    hover_data=["revenue"]
+    title="Revenue Contribution by Category"
 )
 fig2.update_traces(
     textinfo="percent+label",
     pull=[0.05]*len(revenue_chart),
-    hoverinfo="label+percent+value",
-    hoverlabel=dict(bgcolor="#FFB84D", font_size=16, font_color="#000000", font_family="Roboto")
+    hoverinfo="label+percent+value"
 )
 fig2.update_layout(
-    title={'text': "Revenue Contribution by Category", 'x':0.5, 'xanchor':'center', 'y':0.95, 'yanchor':'top'},
+    title={'text': "Revenue Contribution by Category", 'x':0.5, 'xanchor':'center'},
     title_font=dict(size=24, color="#E5E5E5", family="Roboto"),
     showlegend=True,
     legend=dict(title="Test Category", font=dict(color="#E5E5E5", size=14),
@@ -199,12 +197,11 @@ fig3 = px.bar(
     y="test_name",
     orientation="h",
     color="test_name",
-    template="plotly_dark",
     color_discrete_sequence=px.colors.sequential.Agsunset,
-    hover_data=["revenue"]
+    title="Top 10 Revenue Generating Tests"
 )
 fig3.update_layout(
-    title={'text': "Top 10 Revenue Generating Tests", 'x':0.5, 'xanchor':'center', 'y':0.95, 'yanchor':'top'},
+    title={'text': "Top 10 Revenue Generating Tests", 'x':0.5, 'xanchor':'center'},
     title_font=dict(size=24, color="#E5E5E5", family="Roboto"),
     showlegend=True,
     legend=dict(title="Test Name", font=dict(color="#E5E5E5", size=12),
@@ -212,13 +209,14 @@ fig3.update_layout(
     yaxis={'categoryorder':'total ascending'},
     plot_bgcolor=chart_bg_color,
     paper_bgcolor=chart_bg_color,
-    font_color="#E5E5E5"
+    font_color="#E5E5E5",
+    xaxis=dict(title_font=dict(color="#E5E5E5"), tickfont=dict(color="#E5E5E5")),
+    yaxis_tickfont=dict(color="#E5E5E5")
 )
 fig3.update_traces(
     marker=dict(line=dict(width=1, color='white')),
     opacity=0.9,
-    hovertemplate="<b>%{y}</b><br>Revenue: ₹%{x:,.2f}<extra></extra>",
-    hoverlabel=dict(bgcolor="#FF6F61", font_size=16, font_color="#FFFFFF", font_family="Roboto")
+    hovertemplate="<b>%{y}</b><br>Revenue: ₹%{x:,.2f}<extra></extra>"
 )
 st.plotly_chart(fig3, use_container_width=True)
 
@@ -230,25 +228,25 @@ fig4 = px.line(
     x="test_date",
     y="Total Tests",
     markers=True,
-    template="plotly_dark",
     color_discrete_sequence=["#00CED1"],
-    hover_data=["Total Tests"]
+    title="Monthly Test Demand Trend"
 )
 fig4.update_traces(
     line=dict(width=4),
     marker=dict(size=10, color="#00CED1", line=dict(width=2, color="white")),
-    hovertemplate="<b>%{x|%b %Y}</b><br>Total Tests: %{y}<extra></extra>",
-    hoverlabel=dict(bgcolor="#00FFFF", font_size=16, font_color="#000000", font_family="Roboto")
+    hovertemplate="<b>%{x|%b %Y}</b><br>Total Tests: %{y}<extra></extra>"
 )
 fig4.update_layout(
-    title={'text': "Monthly Test Demand Trend", 'x':0.5, 'xanchor':'center', 'y':0.95, 'yanchor':'top'},
+    title={'text': "Monthly Test Demand Trend", 'x':0.5, 'xanchor':'center'},
     title_font=dict(size=24, color="#E5E5E5", family="Roboto"),
     showlegend=True,
     legend=dict(title="Month", font=dict(color="#E5E5E5", size=12),
                 bgcolor="#0B1524", bordercolor="#4DB6AC", borderwidth=1),
     plot_bgcolor=chart_bg_color,
     paper_bgcolor=chart_bg_color,
-    font_color="#E5E5E5"
+    font_color="#E5E5E5",
+    xaxis=dict(title_font=dict(color="#E5E5E5"), tickfont=dict(color="#E5E5E5")),
+    yaxis=dict(title_font=dict(color="#E5E5E5"), tickfont=dict(color="#E5E5E5"))
 )
 st.plotly_chart(fig4, use_container_width=True)
 
