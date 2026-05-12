@@ -53,6 +53,10 @@ if file:
     try:
         # Read Excel file directly
         df = pd.read_excel(file)
+        
+        # Standardize column names to lowercase with underscores
+        df.columns = df.columns.str.lower().str.replace(' ', '_')
+        
         st.sidebar.success("Data uploaded successfully!")
     except Exception as e:
         st.sidebar.error(f"Error reading file: {str(e)}")
@@ -66,16 +70,27 @@ if df.empty:
     st.stop()
 
 # --- Safe date parsing ---
-df['test_date'] = pd.to_datetime(df['test_date'], errors='coerce')
-df = df.dropna(subset=['test_date'])
+try:
+    df['test_date'] = pd.to_datetime(df['test_date'], errors='coerce')
+    df = df.dropna(subset=['test_date'])
+except KeyError:
+    st.error("Error: The 'Test_Date' column is missing from your file.")
+    st.info("Please ensure your Excel file contains a 'Test_Date' column.")
+    st.stop()
 
 # Check for required columns
-required_columns = ['test_date', 'test_category', 'test_name', 'test_price', 'revenue']
+required_columns = ['test_date', 'test_category', 'test_name', 'test_price_inr', 'revenue_inr']
 missing_columns = [col for col in required_columns if col not in df.columns]
 if missing_columns:
     st.error(f"Missing required columns: {', '.join(missing_columns)}")
-    st.info("Required columns: test_date, test_category, test_name, test_price, revenue")
+    st.info("Your file should contain: Test_Date, Test_Category, Test_Name, Test_Price_INR, Revenue_INR")
     st.stop()
+
+# Rename columns for easier reference
+df = df.rename(columns={
+    'test_price_inr': 'test_price',
+    'revenue_inr': 'revenue'
+})
 
 # --- Sidebar Filters ---
 categories = df['test_category'].unique().tolist()
